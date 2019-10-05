@@ -1,5 +1,5 @@
 package com.carsel.exchangerate;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -24,6 +26,7 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
+
 import static android.widget.Toast.LENGTH_LONG;
 public class MainActivity extends AppCompatActivity implements Runnable {
     EditText editText;
@@ -65,11 +68,8 @@ public class MainActivity extends AppCompatActivity implements Runnable {
 
                 if(mesg!=null&&mesg.what==5){//检查发送过来的快递单号
                     String res=mesg.obj.toString();//获得HTML
-
-
                     Document doc = Jsoup.parse(res);
                     Elements trs = doc.select("table").select("tr"); // 关键的一步 从html中把课表解析出来
-
                     for (int i = 1; i < trs.size(); i++) {
                         Elements tds = trs.get(i).select("td");
                         String name=tds.get(0).text().trim();//获取名称
@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements Runnable {
                                         case "韩币" : wonRate=100/(Float.parseFloat(x));break;
                                         default : break;
                                     }
-
                                 }
                             }
                         }
@@ -104,13 +103,9 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         };//Handel结束
         Thread thread = new Thread(this);//线程初始化，注意线程的初始化应该在Handel后面
         thread.start();
-
-
     }//onCreate方法结束
-
     public void run(){ //子线程开启
-        // 获取网络数据
-        URL url;
+        URL url; // 获取网络数据
         try {
             url = new URL("http://www.usd-cny.com/icbc.htm");//在调试时一定要记得把手机的网打开
             Log.i(TAG,"run:url="+url);
@@ -119,18 +114,14 @@ public class MainActivity extends AppCompatActivity implements Runnable {
             String html = inputStream2String(in);
 
             if(html!=null){
-//                Log.i(TAG,"html="+html);
                 msg = handler.obtainMessage(5);//填写快递单号
                 msg.obj = html;//快递内容
-                handler.sendMessage(msg);//发送
-                //将HTML发过去
+                handler.sendMessage(msg);//将HTML发过去
             }
-
         } catch (IOException exception) {
             exception.printStackTrace();
         }
     }//run方法结束
-
     public void Dollar(View view){//Dollar
         money=editText.getText().toString();
         if(money==null||money.length()==0||money.equals("0")){//如果输入不规范，则提示输入错误
@@ -239,5 +230,4 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         }
         return out.toString();
     }
-
 }
