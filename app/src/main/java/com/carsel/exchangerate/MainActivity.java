@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements Runnable {
             Log.i(TAG,"the euro_rate from myrate is = "+euroRate);
             Log.i(TAG,"the won_rate from myrate is = "+wonRate);
         }
-
         //收快递
         handler = new Handler(){//生命周期为窗口的打开到关闭
             public void handleMessage(Message mesg){//时刻监测
