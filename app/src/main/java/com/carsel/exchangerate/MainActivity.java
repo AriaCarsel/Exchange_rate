@@ -26,6 +26,8 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
 public class MainActivity extends AppCompatActivity implements Runnable {
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
     Button btn1,btn2,btn3;
     String money,TAG;
     float dollarRate,euroRate,wonRate,res;
+    List<String> list1 = new ArrayList<>();
 
     Handler handler;//管理不同线程之间的消息，协助线程消息传递
     Message msg;//线程之间消息实例
@@ -70,33 +73,36 @@ public class MainActivity extends AppCompatActivity implements Runnable {
                     String res=mesg.obj.toString();//获得HTML
                     Document doc = Jsoup.parse(res);
                     Elements trs = doc.select("table").select("tr"); // 关键的一步 从html中把课表解析出来
+
                     for (int i = 1; i < trs.size(); i++) {
+                        String temp="";
                         Elements tds = trs.get(i).select("td");
                         String name=tds.get(0).text().trim();//获取名称
-                        if(!name.equals("美元")&&!name.equals("欧元")&&!name.equals("韩币")){//如果不是需要的币种
-                            continue;//跳出本次循环
-                        }
-                        else {
-                            for(int j=1;j<tds.size();j++) {
-                                String x = tds.get(j).text().trim();//获取汇率
-                                if(x.equals("--"))//如果当前汇率为空
-                                    continue;
-                                else {
-                                    switch(name) {
-                                        case "美元" : dollarRate=100/(Float.parseFloat(x));break;
-                                        case "欧元" : euroRate=100/(Float.parseFloat(x));break;
-                                        case "韩币" : wonRate=100/(Float.parseFloat(x));break;
-                                        default : break;
-                                    }
+
+                        for(int j=1;j<tds.size();j++) {
+                            String x = tds.get(j).text().trim();//获取汇率
+                            if(x.equals("--"))//如果当前汇率为空
+                                continue;
+                            else{
+                                switch(name) {
+                                    case "美元" : dollarRate=100/(Float.parseFloat(x));break;
+                                    case "欧元" : euroRate=100/(Float.parseFloat(x));break;
+                                    case "韩币" : wonRate=100/(Float.parseFloat(x));break;
+                                    default : break;
                                 }
+                                temp=temp+name+":"+x;
+                                list1.add(temp);
+                                break;
                             }
                         }
                     }
-
                Log.i(TAG,"美元汇率为："+dollarRate);
                Log.i(TAG,"欧元汇率为："+euroRate);
                Log.i(TAG,"美元汇率为："+wonRate);
                 //处理结束
+                for(int i=0;i<list1.size();i++){
+                    Log.i(TAG,list1.get(i));
+                }
                 }
                 super.handleMessage(mesg);//标配语句，不用理解但是必须由
             }
@@ -201,6 +207,19 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         //config传输数据
         config.putExtras(bdl);
         startActivityForResult(config,1);
+    }
+    public void Reference(View view){
+        Intent config;
+        config = new Intent(this,RateListActivity.class);//打开列表页面
+        //装入Bundle
+        Bundle bdl = new Bundle();
+        bdl.putStringArrayList("list", (ArrayList<String>) list1);
+        Log.i(TAG,"put list into Bundle:"+list1);
+        //intent传输数据
+        config.putExtras(bdl);
+        startActivityForResult(config,2);
+        Log.i(TAG,"goto list************************************************");
+
     }
     protected void onActivityResult(int requestCode,int resultCode,Intent data){//其他页面跳转过来时的内容接收
         if(requestCode==1&&resultCode==2){
