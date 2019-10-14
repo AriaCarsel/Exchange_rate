@@ -25,6 +25,7 @@ public class RateListActivity extends AppCompatActivity {
         if(bdl!=null){
             list2=bdl.getStringArrayList("list");
         }
+
         ArrayAdapter<String> arrayAdapter;
         arrayAdapter = new ArrayAdapter<String> (
                 this, android.R.layout.simple_list_item_1,list2);

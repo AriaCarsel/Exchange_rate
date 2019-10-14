@@ -27,7 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import static android.widget.Toast.LENGTH_LONG;
 public class MainActivity extends AppCompatActivity implements Runnable {
@@ -36,7 +36,8 @@ public class MainActivity extends AppCompatActivity implements Runnable {
     Button btn1,btn2,btn3;
     String money,TAG;
     float dollarRate,euroRate,wonRate,res;
-    List<String> list1 = new ArrayList<>();
+//    List<String> list1 = new ArrayList<>();
+    ArrayList<HashMap<String, String>> listItems = new ArrayList<>();
 
     Handler handler;//管理不同线程之间的消息，协助线程消息传递
     Message msg;//线程之间消息实例
@@ -80,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements Runnable {
                         String name=tds.get(0).text().trim();//获取名称
 
                         for(int j=1;j<tds.size();j++) {
+                            HashMap<String,String> map = new HashMap<String, String>();
+
                             String x = tds.get(j).text().trim();//获取汇率
                             if(x.equals("--"))//如果当前汇率为空
                                 continue;
@@ -90,8 +93,9 @@ public class MainActivity extends AppCompatActivity implements Runnable {
                                     case "韩币" : wonRate=100/(Float.parseFloat(x));break;
                                     default : break;
                                 }
-                                temp=temp+name+":"+x;
-                                list1.add(temp);
+                                map.put("ItemTitle",name);
+                                map.put("ItemDetail",x);
+                                listItems.add(map);
                                 break;
                             }
                         }
@@ -100,9 +104,10 @@ public class MainActivity extends AppCompatActivity implements Runnable {
                Log.i(TAG,"欧元汇率为："+euroRate);
                Log.i(TAG,"美元汇率为："+wonRate);
                 //处理结束
-                for(int i=0;i<list1.size();i++){
-                    Log.i(TAG,list1.get(i));
-                }
+                    for(int k=0;k<listItems.size();k++) {
+                        Log.i("",listItems.get(k).get("ItemTitle")+":");
+                        Log.i("",listItems.get(k).get("ItemDetail"));
+                    }
                 }
                 super.handleMessage(mesg);//标配语句，不用理解但是必须由
             }
@@ -193,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
     }
     public void Config(View view){//打开新页面
         Intent config;//跳转工具
-        config = new Intent(this, ConfigActivity.class);//打开config页面
+        config = new Intent(MainActivity.this, ConfigActivity.class);//打开config页面
         //装入Bundle
         Bundle bdl = new Bundle();
         bdl.putFloat("key_dollar",dollarRate);
@@ -209,15 +214,18 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         startActivityForResult(config,1);
     }
     public void Reference(View view){
-        Intent config;
-        config = new Intent(this,RateListActivity.class);//打开列表页面
-        //装入Bundle
+        Intent intent;
+        intent = new Intent(MainActivity.this,SimpleListActivity.class);//打开列表页面
+        //装入Intent
         Bundle bdl = new Bundle();
-        bdl.putStringArrayList("list", (ArrayList<String>) list1);
-        Log.i(TAG,"put list into Bundle:"+list1);
+        for(int i=0;i<listItems.size();i++){
+            bdl.putSerializable(String.valueOf(i), listItems.get(i));
+        }
+        bdl.putInt("list_size",listItems.size());
+        Log.i(TAG,"put list into Intent:"+listItems);
+        intent.putExtras(bdl);
         //intent传输数据
-        config.putExtras(bdl);
-        startActivityForResult(config,2);
+        startActivityForResult(intent,2);
         Log.i(TAG,"goto list************************************************");
 
     }

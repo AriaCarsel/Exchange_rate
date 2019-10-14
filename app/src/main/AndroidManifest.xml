@@ -18,9 +18,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ConfigActivity">
         </activity>
-        <activity android:name=".RateListActivity">
+        <activity android:name=".SimpleListActivity">
+        </activity>
+
+        <activity android:name=".ChangeAnytimeActivity">
         </activity>
     </application>
 
