@@ -26,6 +26,8 @@
 
         <activity android:name=".ChangeAnytimeActivity">
         </activity>
+        <activity android:name=".GridViewActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -23,6 +23,7 @@ public class ChangeAnytimeActivity extends  AppCompatActivity implements TextWat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.change_anytime);
+
         Intent intent = getIntent();
         Bundle bdl = intent.getExtras();
 
@@ -38,9 +39,7 @@ public class ChangeAnytimeActivity extends  AppCompatActivity implements TextWat
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
-
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         Float res=0.0f;
@@ -60,8 +59,6 @@ public class ChangeAnytimeActivity extends  AppCompatActivity implements TextWat
                 textView.setText(money);
         }
     }
-
     @Override
-    public void afterTextChanged(Editable s) {
-    }
+    public void afterTextChanged(Editable s) { }
 }

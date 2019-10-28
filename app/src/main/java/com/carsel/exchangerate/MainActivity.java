@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements Runnable {
     Button btn1,btn2,btn3;
     String money,TAG;
     float dollarRate,euroRate,wonRate,res;
-//    List<String> list1 = new ArrayList<>();
     ArrayList<HashMap<String, String>> listItems = new ArrayList<>();
 
     Handler handler;//管理不同线程之间的消息，协助线程消息传递
@@ -76,12 +75,11 @@ public class MainActivity extends AppCompatActivity implements Runnable {
                     Elements trs = doc.select("table").select("tr"); // 关键的一步 从html中把课表解析出来
 
                     for (int i = 1; i < trs.size(); i++) {
-                        String temp="";
                         Elements tds = trs.get(i).select("td");
                         String name=tds.get(0).text().trim();//获取名称
 
                         for(int j=1;j<tds.size();j++) {
-                            HashMap<String,String> map = new HashMap<String, String>();
+                            HashMap<String,String> map = new HashMap<>();
 
                             String x = tds.get(j).text().trim();//获取汇率
                             if(x.equals("--"))//如果当前汇率为空
@@ -226,9 +224,14 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         intent.putExtras(bdl);
         //intent传输数据
         startActivityForResult(intent,2);
-        Log.i(TAG,"goto list************************************************");
-
     }
+    public void GridList(View view){
+        Intent intent;
+        intent = new Intent(MainActivity.this,GridViewActivity.class);//打开列表页面
+
+        startActivityForResult(intent,3);
+    }
+
     protected void onActivityResult(int requestCode,int resultCode,Intent data){//其他页面跳转过来时的内容接收
         if(requestCode==1&&resultCode==2){
             Bundle bdl = data.getExtras();
@@ -257,4 +260,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         }
         return out.toString();
     }
+
+
+
 }

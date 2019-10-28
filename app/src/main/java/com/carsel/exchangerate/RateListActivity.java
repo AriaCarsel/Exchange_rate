@@ -27,8 +27,7 @@ public class RateListActivity extends AppCompatActivity {
         }
 
         ArrayAdapter<String> arrayAdapter;
-        arrayAdapter = new ArrayAdapter<String> (
-                this, android.R.layout.simple_list_item_1,list2);
+        arrayAdapter = new ArrayAdapter<> (this, android.R.layout.simple_list_item_1,list2);
         listView.setAdapter(arrayAdapter);
     }
 }
